@@ -23,6 +23,17 @@ services:
     networks:
       - iris
 
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./configs/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - iris
+    depends_on:
+      - oncall-web
+    ports:
+      - "9090:9090"
+
 networks:
   iris:
     name: iris
