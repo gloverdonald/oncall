@@ -4,6 +4,10 @@ global:
   scrape_timeout: 5s
   evaluation_interval: 1m
 scrape_configs:
+  - job_name: "my-oncall-exporter"
+    static_configs:
+      - targets: ["host.docker.internal:9400"]
+  
   - job_name: oncall-dns-scrape
     dns_sd_configs:
       - names:
@@ -11,4 +15,59 @@ scrape_configs:
         type: A
         port: 8100
         refresh_interval: 30s
+  - job_name: 'node_exporter'
+    static_configs:
+      - targets: ['host.docker.internal:9100']
 
+  - job_name: 'blackbox-http-oncall'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets:
+        - http://158.160.98.4:8080/
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 158.160.98.4:9115
+
+  - job_name: 'blackbox-icmp-oncall'
+    metrics_path: /probe
+    params:
+      module: [icmp]
+    dns_sd_configs:
+      - names:
+          - oncall-web
+        type: A
+        port: 8080
+        refresh_interval: 30s
+    relabel_configs:
+      - source_labels: [__address__]
+        regex: '(.+):.*'
+        replacement: '$1'
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 158.160.98.4:9115
+
+  - job_name: 'blackbox-tcp-oncall'
+    metrics_path: /probe
+    params:
+      module: [tcp_connect]
+    dns_sd_configs:
+      - names:
+          - oncall-web
+        type: A
+        port: 8080
+        refresh_interval: 30s
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 158.160.98.4:9115

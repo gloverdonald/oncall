@@ -1,5 +1,5 @@
+---
 version: '3'
-
 services:
   oncall-web:
     build: .
@@ -14,7 +14,6 @@ services:
       - ./configs/config.docker.yaml:/home/oncall/config/config.yaml
     networks:
       - iris
-  
   oncall-mysql:
     hostname: oncall-mysql
     image: mysql:5.7
@@ -22,7 +21,6 @@ services:
       - MYSQL_ROOT_PASSWORD=1234
     networks:
       - iris
-
   prometheus:
     image: prom/prometheus
     volumes:
@@ -33,7 +31,8 @@ services:
       - oncall-web
     ports:
       - "9090:9090"
-
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 networks:
   iris:
     name: iris
