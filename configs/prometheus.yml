@@ -71,3 +71,11 @@ scrape_configs:
         target_label: instance
       - target_label: __address__
         replacement: 158.160.98.4:9115
+
+rule_files:
+  - rules.yml
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['alertmanager:9093']

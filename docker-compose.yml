@@ -44,6 +44,19 @@ services:
      - '3000:3000'
     networks:
       - iris
+  alertmanager:
+    image: quay.io/prometheus/alertmanager
+    container_name: alertmanager
+    volumes:
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+      - alertmanager_data:/alertmanager/data
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+    ports:
+      - 9093:9093
+    networks:
+      - iris
+
 networks:
   iris:
     name: iris
