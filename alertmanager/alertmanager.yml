@@ -5,7 +5,7 @@ global:
 receivers:
   - name: telegram
     telegram_configs:
-      - chat_id: -12345678 # chat_id без ""
+      - chat_id:
         bot_token: ""
         api_url: "https://api.telegram.org"
         send_resolved: true
