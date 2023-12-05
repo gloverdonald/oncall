@@ -2,6 +2,7 @@ global:
   resolve_timeout: 5m
   telegram_api_url: "https://api.telegram.org"
 
+
 receivers:
   - name: telegram
     telegram_configs:
@@ -18,3 +19,5 @@ route:
       continue: true
       matchers:
         - severity="critical"
+
+
